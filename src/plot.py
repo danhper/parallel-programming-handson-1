@@ -8,7 +8,7 @@ RESULT_LINES = [5, 13, 21]
 CORES = [1, 2, 4, 6, 8, 12, 16, 24, 32, 40, 48, 56, 64]
 
 def parse_result_line(line):
-    return float(re.search('in (\d+(?:\.\d+)?) sec', line).group(1)) * 1000
+    return float(re.search('in (\d+(?:\.\d+)?) sec', line).group(1))
 
 
 def parse_results(lines):
