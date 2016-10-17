@@ -7,7 +7,8 @@ RESULT_LINES = [5, 13, 21]
 CORES = [1, 2, 4, 6, 8, 12, 16, 24, 32, 40, 48, 56, 64]
 
 def parse_result_line(line):
-    return float(re.search('in (\d+(?:\.\d+)?) sec', line).group(1))
+    return float(re.search('in (\d+(?:\.\d+)?) sec', line).group(1)) * 1000
+
 
 def parse_results(lines):
     core_results = [0 for _ in range(len(CORES))]
@@ -17,10 +18,18 @@ def parse_results(lines):
     return core_results
 
 
+def plot_graph(results):
+    plt.plot(CORES, results, 'bo', CORES, results, 'k')
+    plt.title('distributed k-d tree creation performance')
+    plt.ylabel('Execution time (ms)')
+    plt.xlabel('Cores number')
+    plt.xticks([1, 4, 8, 16, 24, 32, 40, 48, 56, 64])
+    plt.savefig('plot.png')
+
+
 if __name__ == '__main__':
     x = CORES
     with open(RESULTS_FILE, 'r') as f:
         lines = f.readlines()
-    y = parse_results(lines)
-    plt.plot(x, y)
-    plt.show()
+    results = parse_results(lines)
+    plot_graph(results)
