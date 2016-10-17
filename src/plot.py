@@ -1,4 +1,5 @@
 import re
+import numpy as np
 import matplotlib.pyplot as plt
 
 RESULTS_FILE = 'result.log'
@@ -18,10 +19,16 @@ def parse_results(lines):
     return core_results
 
 
+def compute_speedup(results):
+    return results[0] / np.asarray(results)
+
+
 def plot_graph(results):
-    plt.plot(CORES, results, 'bo', CORES, results, 'k')
+    x = CORES
+    y = compute_speedup(results)
+    plt.plot(x, y, 'bo', x, y, 'k')
     plt.title('distributed k-d tree creation performance')
-    plt.ylabel('Execution time (ms)')
+    plt.ylabel('Speedup')
     plt.xlabel('Cores number')
     plt.xticks([1, 4, 8, 16, 24, 32, 40, 48, 56, 64])
     plt.savefig('plot.png')

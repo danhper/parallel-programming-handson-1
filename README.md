@@ -2,4 +2,4 @@
 
 ## Exercise 4 graph
 
-![Graph](https://cloud.githubusercontent.com/assets/1436271/19434017/2dc52eb4-949e-11e6-87c3-733add12e7a4.png)
+![Graph](![plot](https://cloud.githubusercontent.com/assets/1436271/19435280/b9a02992-94a4-11e6-8ebc-7f613b1aa85f.png)
