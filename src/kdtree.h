@@ -6,6 +6,7 @@
 #include <math.h>
 #include <mtbb/task_group.h>
 #include "kdtree_base.h"
+#include "algorithm.h"
 
 /* tree building procedures */
 
@@ -78,6 +79,15 @@ long partition(point * points, long a, long b, int d) {
   return h;
 }
 
+long point_parallel_partition(point * points, long left, long right, long axis)
+{
+    long pivot_index = find_piv(points, left, right, axis);
+    real pivot_value = points[pivot_index].x[axis];
+    return parallel_partition<point, real>(points, pivot_value, left, right,
+                                           [&axis](point p, real r) { return p.x[axis] - r; });
+
+}
+
 /* build kdtree from points[a:b].
    memory is allocated from nodes array,
    which can accommodate (at least) (b - a) nodes.
@@ -102,7 +112,8 @@ node * kdtree_build_rec(point * points, node * nodes,
        i.e.,
        points[a+1:h] is the points geometrically left of (or below) pivot
        points[h:b] is the points geometrically right of (or above) pivot */
-    long h = partition(points, a, b, split_axis);
+    long h = point_parallel_partition(points, a, b, split_axis);
+    // long h = partition(points, a, b, split_axis);
     int next_split_axis = (split_axis + 1) % dim;
     /* bounding boxes for children */
     bbox cbox[2] = { box, box };
