@@ -125,8 +125,11 @@ node * kdtree_build_rec(point * points, node * nodes,
        i.e.,
        points[a+1:h] is the points geometrically left of (or below) pivot
        points[h:b] is the points geometrically right of (or above) pivot */
+    #ifdef PARALLEL
     long h = point_parallel_partition(points, a, b, split_axis);
-    // long h = partition(points, a, b, split_axis);
+    #else
+    long h = partition(points, a, b, split_axis);
+    #endif
     int next_split_axis = (split_axis + 1) % dim;
     /* bounding boxes for children */
     bbox cbox[2] = { box, box };
