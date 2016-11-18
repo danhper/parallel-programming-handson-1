@@ -1,5 +1,5 @@
 h_files := $(wildcard *.h)
-cc_files := $(wildcard *.cc)
+cc_files := kdtree_main.cc
 opts :=
 opts += -O3
 opts += -Wall
