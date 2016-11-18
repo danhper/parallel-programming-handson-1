@@ -8,6 +8,8 @@
 #include "kdtree_base.h"
 #include "algorithm.h"
 
+#define EPSILON 0.000000001
+
 /* tree building procedures */
 
 enum {
@@ -79,13 +81,24 @@ long partition(point * points, long a, long b, int d) {
   return h;
 }
 
+int compare_real(real a, real b)
+{
+    real diff = a - b;
+    if (diff < EPSILON) {
+        return -1;
+    } else if (diff > EPSILON) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 long point_parallel_partition(point * points, long left, long right, long axis)
 {
     long pivot_index = find_piv(points, left, right, axis);
     real pivot_value = points[pivot_index].x[axis];
-    return parallel_partition<point, real>(points, pivot_value, left, right,
-                                           [&axis](point p, real r) { return p.x[axis] - r; });
-
+    return parallel_partition<point, real>(points, pivot_value, left, right - 1,
+                                           [axis](point p, real r) { return compare_real(p.x[axis], r); });
 }
 
 /* build kdtree from points[a:b].
