@@ -1,5 +1,8 @@
-#include "algorithm.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+#include "algorithm.h"
 
 template <typename T>
 T basic_partition(T* array, long n)
@@ -24,13 +27,13 @@ T basic_partition(T* array, long n)
 
 int main(void)
 {
-    srand(time(NULL));
+    std::srand(std::time(0));
 
-    long n = 1000000;
+    long n = 10000000;
     int* array = new int[n];
     int max_val = 10000;
     for (long i = 0; i < n; i++) {
-        array[i] = rand() % max_val;
+        array[i] = std::rand() % max_val;
     }
 
     int pivot = max_val / 2;
@@ -42,7 +45,6 @@ int main(void)
     // with_exec_time("basic_partition", [&]() {
     //     pivot = basic_partition<int>(array, n);
     // });
-
 
     check_partition(array, n, pivot);
 

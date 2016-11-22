@@ -5,8 +5,8 @@ opts :=
 opts += -Wall
 opts += -std=c++14
 opts += -g
-ifdef PARALLEL
-opts += -DPARALLEL
+ifdef SERIAL
+opts += -DSERIAL
 endif
 
 CXXFLAGS := $(opts)

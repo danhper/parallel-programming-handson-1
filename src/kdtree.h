@@ -97,8 +97,12 @@ long point_parallel_partition(point * points, long left, long right, long axis)
 {
     long pivot_index = find_piv(points, left, right, axis);
     real pivot_value = points[pivot_index].x[axis];
-    return parallel_partition<point, real>(points, pivot_value, left, right - 1,
-                                           [axis](point p, real r) { return compare_real(p.x[axis], r); });
+    long new_pivot_index = parallel_partition<point, real>(points, pivot_value, left, right - 1,
+                                            [axis](point p, real r) { return compare_real(p.x[axis], r); });
+    point tmp = points[new_pivot_index - 1];
+    points[new_pivot_index - 1] = points[left];
+    points[left] = tmp;
+    return new_pivot_index;
 }
 
 /* build kdtree from points[a:b].
@@ -125,10 +129,10 @@ node * kdtree_build_rec(point * points, node * nodes,
        i.e.,
        points[a+1:h] is the points geometrically left of (or below) pivot
        points[h:b] is the points geometrically right of (or above) pivot */
-    #ifdef PARALLEL
-    long h = point_parallel_partition(points, a, b, split_axis);
-    #else
+    #ifdef SERIAL
     long h = partition(points, a, b, split_axis);
+    #else
+    long h = point_parallel_partition(points, a, b, split_axis);
     #endif
     int next_split_axis = (split_axis + 1) % dim;
     /* bounding boxes for children */
